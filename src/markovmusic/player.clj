@@ -1,4 +1,5 @@
-(ns markovmusic.player)
+(ns markovmusic.player
+	(:use [overtone.live]))
 
 (defn play
   "Plays a sequence of notes with given instrument and start time."
