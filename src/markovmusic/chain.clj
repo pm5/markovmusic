@@ -15,13 +15,19 @@
       (cons next-note
           (generate-notes frequency-matrix next-note)))))
 
+(def duration-vector [100 200 200])
+
+(defn generate-next-note-duration
+  [frequency-matrix note]
+  {:degree (generate-next-note frequency-matrix (note :degree)) :duration (duration-vector (int (rand (count duration-vector))))})
+
 (defn generate-notes-duration
   "Generate notes with duration."
-  [frequency-matrix note sep]
-  (let [next-note (generate-next-note frequency-matrix note)]
+  [frequency-matrix note]
+  (let [next-note (generate-next-note-duration frequency-matrix note)]
     (lazy-seq
-      (cons {:degree note :duration sep}
-            (generate-notes-duration frequency-matrix next-note sep)))))
+      (cons note
+            (generate-notes-duration frequency-matrix next-note)))))
 
 ;(def reich-degrees [:vi :vii :i+ :_ :vii :_ :i+ :vii :vi :_ :vii :_])
 ;(generate-next-note reich-frequency-matrix :vi)
