@@ -21,6 +21,11 @@
                      :velocity (.getData2 (% :message))
                      :command (% :command)
                      }))
-          ))))
+          (reduce (fn [[current-event notes] event]
+                    (if (= note-on (event :command))
+                      [event notes]
+                      [nil (if (not= nil current-event) (conj notes (assoc current-event :duration (- (event :tick) (current-event :tick)))) notes)]))
+                  [nil []])
+          last))))
 
-(read-file "resources/WTCBkI/Fugue1.mid" 1)
+;(read-file "resources/WTCBkI/Fugue1.mid" 1)
