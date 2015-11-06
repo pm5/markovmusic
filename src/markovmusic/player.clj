@@ -13,7 +13,7 @@
 
 (defn to-pitch
   [note scale root]
-  (let [{de :degree du :duration} note]
+  (let [{de :value du :duration} note]
   {:freq (first (degrees->pitches [de] scale root)) :duration du}))
 
 (defn play-duration-notes

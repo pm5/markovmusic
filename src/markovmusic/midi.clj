@@ -28,4 +28,4 @@
                   [nil []])
           last))))
 
-;(read-file "resources/WTCBkI/Fugue1.mid" 1)
+(read-file "resources/WTCBkI/Fugue1.mid" 1)
