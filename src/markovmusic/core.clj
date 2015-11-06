@@ -1,7 +1,8 @@
 (ns markovmusic.core
 	(:require [markovmusic.player :as player]
 						[markovmusic.chain :as chain]
-            [markovmusic.ctmc :as ctmc])
+            [markovmusic.ctmc :as ctmc]
+            [markovmusic.midi :as midi])
 	(:use [overtone.live]
 				[overtone.inst.piano]
         [overtone.inst.drum]))
@@ -16,9 +17,12 @@
 
 (stop)
 
-(player/play-fixed-length-notes piano (now) reich-pitches 200)
-(player/play-fixed-length-notes piano (now) (degrees->pitches (take 16 (chain/generate-notes reich-frequency-matrix nil)) :diatonic :C4) 200)
+;(player/play-fixed-length-notes piano (now) reich-pitches 200)
+(let [sequence (take 32 (chain/generate-notes reich-frequency-matrix nil))]
+  (player/play-fixed-length-notes piano (now) (degrees->pitches sequence :diatonic :C4) 200)
+  ;(player/play-fixed-length-notes piano (+ (now) 1600) (degrees->pitches sequence :diatonic :G3) 200)
+  )
 
-(player/play piano (now)
-             (take 64 (chain/generate-notes-duration reich-frequency-matrix {:degree nil :duration 0}))
-             :minor :A3)
+(let [sequence (take 32 (chain/generate-notes-duration reich-frequency-matrix {:degree nil :duration 0}))]
+  (player/play piano (now) sequence :minor :A3)
+  )
