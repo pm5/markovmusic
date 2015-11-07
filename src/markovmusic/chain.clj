@@ -12,7 +12,7 @@
   [frequency-matrix current]
   (let [next-value (generate-next frequency-matrix current)]
     (lazy-seq
-      (cons next-value
+      (cons current
           (generate frequency-matrix next-value)))))
 
 (defn exponetial-rand
