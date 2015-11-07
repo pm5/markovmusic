@@ -15,14 +15,15 @@
 (def happy-pitches (degrees->pitches happy-degrees :diatonic :C4))
 (player/play-fixed-length-notes piano (now) happy-pitches 200)
 
-(let [sequence (take 32 (chain/generate reich-frequency-matrix nil))]
+(let [sequence (cycle (take 32 (chain/generate reich-frequency-matrix nil)))]
   (player/play-fixed-length-notes piano (now) (degrees->pitches sequence :diatonic :C4) 200)
+  (player/play-fixed-length-notes piano (+ 1600 (now)) (degrees->pitches sequence :diatonic :G3) 400)
   )
 
 (let [sequence (cycle (take 32 (chain/generate-ct reich-frequency-matrix {:value nil :duration 0})))]
   (player/play piano (now) sequence :major :A3)
   )
 
-(midi/read-file "resources/WTCBkI/Fugue1.mid" 1)
+(player/play-duration-notes piano (now) (midi/read-file "resources/WTCBkI/Fugue1.mid" 1))
 
 (stop)

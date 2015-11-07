@@ -7,7 +7,8 @@
 
 (defn read-file
   ([file-name] (read-file file-name 0))
-  ([file-name track]
+  ([file-name track] (read-file file-name track 4))
+  ([file-name track speed-rate]
    (let [sequence (MidiSystem/getSequence (File. file-name))
          track    (-> sequence .getTracks (aget track))]
      (->> (range (.size track))
@@ -24,8 +25,8 @@
           (reduce (fn [[current-event notes] event]
                     (if (= note-on (event :command))
                       [event notes]
-                      [nil (if (not= nil current-event) (conj notes (assoc current-event :duration (- (event :tick) (current-event :tick)))) notes)]))
+                      [nil (if (not= nil current-event) (conj notes (assoc current-event :duration (* speed-rate (- (event :tick) (current-event :tick))))) notes)]))
                   [nil []])
           last))))
 
-(read-file "resources/WTCBkI/Fugue1.mid" 1)
+;(read-file "resources/WTCBkI/Fugue1.mid" 1)

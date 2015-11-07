@@ -40,5 +40,6 @@
                 current))
   )
 
-;(def reich-degrees [:vi :vii :i+ :_ :vii :_ :i+ :vii :vi :_ :vii :_])
-;(generate-next reich-frequency-matrix :vi)
+(defn generate-frequency-matrix
+  []
+  )
