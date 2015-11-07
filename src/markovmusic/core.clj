@@ -45,9 +45,19 @@
 
 ; CTMC
 
-(let [sequence (cycle (take 32 (chain/generate-ct reich-frequency-matrix {:value nil :duration 0})))]
+(let [sequence (take 32 (chain/generate-ct (chain/generate-frequency-matrix reich-degrees) {:value nil :duration 0}))]
   (player/play piano (now) sequence :major :A3)
   )
+
+(let [sequence (take 64 (chain/generate-ct (chain/generate-frequency-matrix two-tigers) {:value nil :duration 0}))]
+  (player/play piano (now) sequence :major :C4)
+  )
+
+(let [sequence (take 128 (chain/generate-ct (chain/generate-frequency-matrix twinkle-star) {:value nil :duration 0}))]
+  (player/play piano (now) sequence :major :C4)
+  )
+
+; MIDI
 
 (player/play-duration-notes piano (now) (midi/read-file "resources/WTCBkI/Fugue1.mid" 1))
 
