@@ -41,5 +41,12 @@
   )
 
 (defn generate-frequency-matrix
-  []
-  )
+  [sequence]
+  (->> sequence
+       (reduce (fn [[prev matrix] current]
+                 [current (assoc matrix prev (vec (conj (matrix prev) current)))])
+               [nil {}])
+       last))
+
+;(generate-frequency-matrix [:a :b :c :d :a :c :a])
+
