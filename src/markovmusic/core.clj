@@ -1,11 +1,10 @@
 (ns markovmusic.core
-	(:require [markovmusic.player :as player]
-						[markovmusic.chain :as chain]
-            [markovmusic.ctmc :as ctmc]
+  (:require [markovmusic.player :as player]
+            [markovmusic.chain :as chain]
             [markovmusic.midi :as midi])
-	(:use [overtone.live]
-				[overtone.inst.piano]
-        [overtone.inst.drum]))
+  (:use [overtone.live]
+        [overtone.inst.piano]
+        ))
 
 ; Reich degrees
 
@@ -52,12 +51,14 @@
 
 (player/play-duration-notes piano (now) (midi/read-file "resources/WTCBkI/Fugue1.mid" 1))
 
-(let [sequence (map #(assoc % :freq (% :value))
-                    (take 32
-                          (chain/generate-ct
-                            (chain/generate-frequency-matrix
-                              (map #(% :freq) (midi/read-file "resources/WTCBkI/Fugue1.mid" 1)))
-                            {:value nil :duration 0})))]
+; XXX needs refactor to map reduce
+(let [sequence
+      (map #(assoc % :freq (% :value))
+           (take 128
+                 (chain/generate-ct
+                   (chain/generate-frequency-matrix
+                     (map #(% :freq) (midi/read-file "resources/WTCBkI/Fugue1.mid" 1)))
+                   {:value nil :duration 0})))]
   (player/play piano (now) sequence))
 
 (stop)
