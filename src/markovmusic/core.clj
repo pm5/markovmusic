@@ -30,6 +30,20 @@
   (player/play-fixed-length-notes piano (now) (degrees->pitches sequence :major :C4) 200)
   )
 
+; Twinkle twinkle little star
+
+(def twinkle-star [:i nil :i nil :v nil :v nil :vi nil :vi nil :v nil nil nil
+                   :iv nil :iv nil :iii nil :iii nil :ii nil :ii nil :i nil nil nil
+                   :v nil :v nil :iv nil :iv nil :iii nil :iii nil :ii nil nil nil
+                   :v nil :v nil :iv nil :iv nil :iii nil :iii nil :ii nil nil nil
+                   :i nil :i nil :v nil :v nil :vi nil :vi nil :v nil nil nil
+                   :iv nil :iv nil :iii nil :iii nil :ii nil :ii nil :i nil nil nil
+                   ])
+
+(let [sequence twinkle-star]
+  (player/play-fixed-length-notes piano (now) (degrees->pitches sequence :major :C4) 200)
+  )
+
 ; CTMC
 
 (let [sequence (cycle (take 32 (chain/generate-ct reich-frequency-matrix {:value nil :duration 0})))]
