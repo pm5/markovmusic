@@ -22,7 +22,6 @@
    (let [note (first notes)]
      (when (note :freq)
        (at time (inst (note :freq))))
-
      (let [next-time (+ time (note :duration))]
        (apply-at next-time play-duration-notes [inst next-time (rest notes)]))))
 

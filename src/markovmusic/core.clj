@@ -21,8 +21,13 @@
   )
 
 (player/play-duration-notes piano (now) (midi/read-file "resources/WTCBkI/Fugue1.mid" 1))
-(chain/generate-frequency-matrix
-  (map #(% :freq)
-       (midi/read-file "resources/WTCBkI/Fugue1.mid" 1)))
+
+(let [sequence (map #(assoc % :freq (% :value))
+                    (take 32
+                          (chain/generate-ct
+                            (chain/generate-frequency-matrix
+                              (map #(% :freq) (midi/read-file "resources/WTCBkI/Fugue1.mid" 1)))
+                            {:value nil :duration 0})))]
+  (player/play piano (now) sequence))
 
 (stop)
