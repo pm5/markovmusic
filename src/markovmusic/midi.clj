@@ -12,7 +12,7 @@
    (let [sequence (MidiSystem/getSequence (File. file-name))
          track    (-> sequence .getTracks (aget track))]
      (->> (range (.size track))
-          (map #(-> {:event (.get track %) :message (-> track (.get %) .getMessage)}))
+          (map #(-> {:event (.get track %) :message (.getMessage (.get track %))}))
           (filter #(instance? ShortMessage (% :message)))
           (map #(assoc % :command (.getCommand (% :message))))
           (filter #(or (= note-on (% :command)) (= note-off (% :command))))
@@ -25,7 +25,13 @@
           (reduce (fn [[current-event notes] event]
                     (if (= note-on (event :command))
                       [event notes]
-                      [nil (if (not= nil current-event) (conj notes (assoc current-event :duration (* speed-rate (- (event :tick) (current-event :tick))))) notes)]))
+                      [nil
+                       (if (not= nil current-event)
+                         (conj notes (dissoc (assoc current-event
+                                                    :duration
+                                                    (* speed-rate (- (event :tick) (current-event :tick)))) :command))
+                         notes)
+                       ]))
                   [nil []])
           last))))
 
