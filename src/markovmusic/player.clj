@@ -3,13 +3,13 @@
 
 (defn play-fixed-length-notes
   "Plays a sequence of notes with given instrument and start time."
-  [inst time notes sep]
+  [inst time sep notes]
   (let [note (first notes)]
     (when note
       (at time (inst note)))
 
     (let [next-time (+ time sep)]
-      (apply-at next-time play-fixed-length-notes [inst next-time (rest notes) sep]))))
+      (apply-at next-time play-fixed-length-notes [inst next-time sep (rest notes)]))))
 
 (defn to-pitch
   [note scale root]

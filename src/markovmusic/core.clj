@@ -10,8 +10,10 @@
 
 (def reich-degrees [:vi :vii :i+ :_ :vii :_ :i+ :vii :vi :_ :vii :_])
 
-(let [sequence reich-degrees]
-  (player/play-fixed-length-notes piano (now) (degrees->pitches sequence :diatonic :C4) 200)
+(let [sequence (->> reich-degrees
+                    )]
+  (player/play-fixed-length-notes piano (now) 200
+                                  (degrees->pitches sequence :diatonic :C4))
   )
 
 ; Two tigers
@@ -25,8 +27,10 @@
                  :i nil :v- nil :i nil nil nil
                  :i nil :v- nil :i nil nil nil])
 
-(let [sequence two-tigers]
-  (player/play-fixed-length-notes piano (now) (degrees->pitches sequence :major :C4) 200)
+(let [sequence (->> two-tigers
+                    )]
+  (player/play-fixed-length-notes piano (now) 200
+                                  (degrees->pitches sequence :major :C4))
   )
 
 ; Twinkle twinkle little star
@@ -39,8 +43,12 @@
                    :iv nil :iv nil :iii nil :iii nil :ii nil :ii nil :i nil nil nil
                    ])
 
-(let [sequence twinkle-star]
-  (player/play-fixed-length-notes piano (now) (degrees->pitches sequence :major :C4) 200)
+(let [sequence (->> twinkle-star
+                    chain/generate-frequency-matrix
+                    chain/generate
+                    (take 32))]
+  (player/play-fixed-length-notes piano (now) 200
+                                  (degrees->pitches sequence :major :C4))
   )
 
 ; CTMC
@@ -67,8 +75,7 @@
            (take 128
                  (chain/generate-ct
                    (chain/generate-frequency-matrix
-                     (map #(% :freq) (midi/read-file "resources/WTCBkI/Fugue1.mid" 1)))
-                   {:value nil :duration 0})))]
+                     (map #(% :freq) (midi/read-file "resources/WTCBkI/Fugue1.mid" 1))))))]
   (player/play piano (now) sequence))
 
 (stop)

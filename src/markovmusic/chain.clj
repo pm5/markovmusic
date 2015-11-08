@@ -9,11 +9,13 @@
 
 (defn generate
   "Generate an infinite sequence with discrete Markov chain"
-  [frequency-matrix current]
-  (let [next-value (generate-next frequency-matrix current)]
-    (lazy-seq
-      (cons current
-          (generate frequency-matrix next-value)))))
+  ([frequency-matrix] (generate frequency-matrix nil))
+  ([frequency-matrix current]
+   (let [next-value (generate-next frequency-matrix current)]
+     (lazy-seq
+       (cons current
+             (generate next-value frequency-matrix)))))
+  )
 
 (defn exponetial-rand
   "Generate a random value between 0 and infinite by exponential distrubtion of given rate."
@@ -28,16 +30,17 @@
 
 (defn generate-ct
   "Generate an infinite sequence of values and duration with CTMC."
+  ([frequency-matrix] (generate-ct frequency-matrix {:value nil :duration 0}))
+  ([frequency-matrix current]
+   (generate-ct frequency-matrix
+                (zipmap (keys frequency-matrix)
+                        (map (fn [x] 0.005) (range (count frequency-matrix))))
+                current))
   ([frequency-matrix holding-rates current]
    (let [next-value (generate-next-ct frequency-matrix holding-rates current)]
      (lazy-seq
        (cons current
              (generate-ct frequency-matrix holding-rates next-value)))))
-
-  ([frequency-matrix current]
-   (generate-ct frequency-matrix
-                (zipmap (keys frequency-matrix) (map (fn [x] 0.005) (range (count frequency-matrix))))
-                current))
   )
 
 (defn generate-frequency-matrix
