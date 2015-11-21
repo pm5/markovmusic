@@ -5,6 +5,7 @@
             )
   (:use [ring.adapter.jetty :only (run-jetty)]
         [ring.middleware.params :only (wrap-params)]
+        [ring.util.response]
         [compojure.core :only (GET POST DELETE defroutes)]
         ))
 
@@ -76,4 +77,10 @@
   (DELETE "/0/:musicbox" [musicbox] ((music :forget)) "")
   (compojure.route/not-found "Sorry, there's nothing here."))
 
-(def app (wrap-params (compojure.handler/api app*)))
+(defn with-cors
+  [handler]
+  (fn [request]
+    (let [response (handler request)]
+      (ring.util.response/header response "Access-Control-Allow-Origin" "*"))))
+
+(def app (with-cors (wrap-params (compojure.handler/api app*))))
