@@ -50,10 +50,9 @@
 (defroutes app*
   (GET "/" request "Welcome! Try our v0 API at /0")
   (GET "/0/:musicbox" [musicbox] (serialize ((music :more))))
-  ;(GET "/0/:machine" [machine] machine)
   (GET "/0/:musicbox/raw" [musicbox] (serialize memory))
-  (POST "/0/:musicbox" [musicbox sequence] (or ((music :learn) (unserialize sequence)) ""))
-  (DELETE "/0/:musicbox" [musicbox] (or ((music :forget)) ""))
+  (POST "/0/:musicbox" [musicbox sequence] ((music :learn) (unserialize sequence)) "")
+  (DELETE "/0/:musicbox" [musicbox] ((music :forget)) "")
   (compojure.route/not-found "Sorry, there's nothing here."))
 
 (def app (wrap-params (compojure.handler/api app*)))
