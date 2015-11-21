@@ -1,49 +1,16 @@
 (ns markovmusic.core
-  (:require ;[markovmusic.player :as player]
-            [markovmusic.chain :as chain]
+  (:require [markovmusic.chain :as chain]
             [markovmusic.midi :as midi]
             [markovmusic.restapi :as api])
-  (:use ;[overtone.live]
-        ;[overtone.inst.piano]
-        [ring.adapter.jetty :only (run-jetty)]
+  (:use [ring.adapter.jetty :only (run-jetty)]
         [environ.core :refer [env]]
         ))
 
 ; REST API
-;(def server (run-jetty #'api/app {:port 8080 :join? false}))
-;(.stop server)
 
 (defn -main [& [port]]
   (let [port (Integer. (or port (env :port) 8080))]
     (run-jetty #'api/app {:port port :join? false})))
-
-; Two tigers
-
-;(let [sequence (->> two-tigers
-                    ;)]
-  ;(player/play-fixed-length-notes piano (now) 200
-                                  ;(degrees->pitches sequence :major :C4))
-  ;)
-
-; Twinkle twinkle little star
-
-(def twinkle-star [:i nil :i nil :v nil :v nil :vi nil :vi nil :v nil nil nil
-                   :iv nil :iv nil :iii nil :iii nil :ii nil :ii nil :i nil nil nil
-                   :v nil :v nil :iv nil :iv nil :iii nil :iii nil :ii nil nil nil
-                   :v nil :v nil :iv nil :iv nil :iii nil :iii nil :ii nil nil nil
-                   :i nil :i nil :v nil :v nil :vi nil :vi nil :v nil nil nil
-                   :iv nil :iv nil :iii nil :iii nil :ii nil :ii nil :i nil nil nil
-                   ])
-
-;(let [sequence (->> twinkle-star
-                    ;chain/generate-frequency-matrix
-                    ;chain/generate
-                    ;(take 512)
-                    ;cycle
-                    ;)]
-  ;(player/play-fixed-length-notes piano (now) 200
-                                  ;(degrees->pitches sequence :major :C4))
-  ;)
 
 ; CTMC
 

@@ -2,33 +2,13 @@
   (:require [compojure.route]
             [compojure.handler]
             [markovmusic.chain :as chain]
+            [markovmusic.sample :as sample]
             )
   (:use [ring.adapter.jetty :only (run-jetty)]
         [ring.middleware.params :only (wrap-params)]
         [ring.util.response]
         [compojure.core :only (GET POST DELETE defroutes)]
         ))
-
-; Reich degrees
-
-(def reich-degrees [:vi :vii :i+ :_ :vii :_ :i+ :vii :vi :_ :vii :_])
-
-(def twinkle-star [:i nil :i nil :v nil :v nil :vi nil :vi nil :v nil nil nil
-                   :iv nil :iv nil :iii nil :iii nil :ii nil :ii nil :i nil nil nil
-                   :v nil :v nil :iv nil :iv nil :iii nil :iii nil :ii nil nil nil
-                   :v nil :v nil :iv nil :iv nil :iii nil :iii nil :ii nil nil nil
-                   :i nil :i nil :v nil :v nil :vi nil :vi nil :v nil nil nil
-                   :iv nil :iv nil :iii nil :iii nil :ii nil :ii nil :i nil nil nil
-                   ])
-
-(def two-tigers [:i nil :ii nil :iii nil :i nil
-                 :i nil :ii nil :iii nil :i nil
-                 :iii nil :iv nil :v nil nil nil
-                 :iii nil :iv nil :v nil nil nil
-                 :v :vi :v :iv :iii nil :i nil
-                 :v :vi :v :iv :iii nil :i nil
-                 :i nil :v- nil :i nil nil nil
-                 :i nil :v- nil :i nil nil nil])
 
 (def memory [])
 
@@ -59,14 +39,14 @@
 
 (defroutes app*
   (GET "/" request "Welcome! Try our v0 API at /0")
-  (GET "/0/two-tigers/raw" [] (serialize two-tigers))
-  (GET "/0/two-tigers" [] (serialize (->> two-tigers
+  (GET "/0/two-tigers/raw" [] (serialize sample/two-tigers))
+  (GET "/0/two-tigers" [] (serialize (->> sample/two-tigers
                                           chain/generate-frequency-matrix
                                           chain/generate
                                           (take 512)
                                           )))
-  (GET "/0/twinkle-star/raw" [] (serialize twinkle-star))
-  (GET "/0/twinkle-star" [] (serialize (->> twinkle-star
+  (GET "/0/twinkle-star/raw" [] (serialize sample/twinkle-star))
+  (GET "/0/twinkle-star" [] (serialize (->> sample/twinkle-star
                                             chain/generate-frequency-matrix
                                             chain/generate
                                             (take 512)
