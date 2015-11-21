@@ -4,6 +4,7 @@
             [markovmusic.chain :as chain]
             )
   (:use [ring.adapter.jetty :only (run-jetty)]
+        [ring.middleware.params :only (wrap-params)]
         [compojure.core :only (GET POST DELETE defroutes)]
         ))
 
@@ -19,25 +20,40 @@
                    :iv nil :iv nil :iii nil :iii nil :ii nil :ii nil :i nil nil nil
                    ])
 
-(defn more-music
-  []
-  (->> twinkle-star
-       chain/generate-frequency-matrix
-       chain/generate
-       (take 512)
-       )
-  )
+(def memory twinkle-star)
 
-;(let [sequence (->> reich-degrees
-                    ;)]
-  ;(player/play-fixed-length-notes piano (now) 200
-                                  ;(degrees->pitches sequence :diatonic :C4))
-  ;)
+(def music
+  {:memory memory
+   :more (defn more-music
+           []
+           (->> memory
+                chain/generate-frequency-matrix
+                chain/generate
+                (take 512)
+                ))
+   :learn (defn learn-music
+            [sequence]
+            (def memory (concat memory sequence)))
+   :forget (defn forget-music
+             []
+             (def memory twinkle-star))
+   })
+
+(defn serialize
+  [sequence]
+  (clojure.string/join " " (map #(if (nil? %) "_" (name %)) sequence)))
+
+(defn unserialize
+  [text]
+  (map #(keyword %) (clojure.string/split text #" ")))
 
 (defroutes app*
   (GET "/" request "Welcome! Try our v0 API at /0")
-  (GET "/0/:machine" [machine] (clojure.string/join " " (map #(if (nil? %) "_" (name %)) (more-music))))
+  (GET "/0/:musicbox" [musicbox] (serialize ((music :more))))
   ;(GET "/0/:machine" [machine] machine)
+  (GET "/0/:musicbox/raw" [musicbox] (serialize memory))
+  (POST "/0/:musicbox" [musicbox sequence] (or ((music :learn) (unserialize sequence)) ""))
+  (DELETE "/0/:musicbox" [musicbox] (or ((music :forget)) ""))
   (compojure.route/not-found "Sorry, there's nothing here."))
 
-(def app (compojure.handler/api app*))
+(def app (wrap-params (compojure.handler/api app*)))
