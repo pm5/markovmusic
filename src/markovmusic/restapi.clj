@@ -20,7 +20,7 @@
                    :iv nil :iv nil :iii nil :iii nil :ii nil :ii nil :i nil nil nil
                    ])
 
-(def memory twinkle-star)
+(def memory [])
 
 (def music
   {:memory memory
@@ -36,7 +36,7 @@
             (def memory (concat memory sequence)))
    :forget (defn forget-music
              []
-             (def memory twinkle-star))
+             (def memory []))
    })
 
 (defn serialize
