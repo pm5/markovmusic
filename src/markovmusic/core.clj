@@ -6,11 +6,16 @@
   (:use [overtone.live]
         [overtone.inst.piano]
         [ring.adapter.jetty :only (run-jetty)]
+        [environ.core :refer [env]]
         ))
 
 ; REST API
-(def server (run-jetty #'api/app {:port 8080 :join? false}))
+;(def server (run-jetty #'api/app {:port 8080 :join? false}))
 ;(.stop server)
+
+(defn -main [& [port]]
+  (let [port (Integer. (or port (env :port) 8080))]
+    (run-jetty #'api/app {:port port :join? false})))
 
 ; Two tigers
 
