@@ -20,6 +20,15 @@
                    :iv nil :iv nil :iii nil :iii nil :ii nil :ii nil :i nil nil nil
                    ])
 
+(def two-tigers [:i nil :ii nil :iii nil :i nil
+                 :i nil :ii nil :iii nil :i nil
+                 :iii nil :iv nil :v nil nil nil
+                 :iii nil :iv nil :v nil nil nil
+                 :v :vi :v :iv :iii nil :i nil
+                 :v :vi :v :iv :iii nil :i nil
+                 :i nil :v- nil :i nil nil nil
+                 :i nil :v- nil :i nil nil nil])
+
 (def memory [])
 
 (def music
@@ -49,6 +58,18 @@
 
 (defroutes app*
   (GET "/" request "Welcome! Try our v0 API at /0")
+  (GET "/0/two-tigers/raw" [] (serialize two-tigers))
+  (GET "/0/two-tigers" [] (serialize (->> two-tigers
+                                          chain/generate-frequency-matrix
+                                          chain/generate
+                                          (take 512)
+                                          )))
+  (GET "/0/twinkle-star/raw" [] (serialize twinkle-star))
+  (GET "/0/twinkle-star" [] (serialize (->> twinkle-star
+                                            chain/generate-frequency-matrix
+                                            chain/generate
+                                            (take 512)
+                                            )))
   (GET "/0/:musicbox" [musicbox] (serialize ((music :more))))
   (GET "/0/:musicbox/raw" [musicbox] (serialize memory))
   (POST "/0/:musicbox" [musicbox sequence] ((music :learn) (unserialize sequence)) "")

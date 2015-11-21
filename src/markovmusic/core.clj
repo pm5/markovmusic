@@ -19,15 +19,6 @@
 
 ; Two tigers
 
-(def two-tigers [:i nil :ii nil :iii nil :i nil
-                 :i nil :ii nil :iii nil :i nil
-                 :iii nil :iv nil :v nil nil nil
-                 :iii nil :iv nil :v nil nil nil
-                 :v :vi :v :iv :iii nil :i nil
-                 :v :vi :v :iv :iii nil :i nil
-                 :i nil :v- nil :i nil nil nil
-                 :i nil :v- nil :i nil nil nil])
-
 ;(let [sequence (->> two-tigers
                     ;)]
   ;(player/play-fixed-length-notes piano (now) 200
