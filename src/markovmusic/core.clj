@@ -1,10 +1,10 @@
 (ns markovmusic.core
-  (:require [markovmusic.player :as player]
+  (:require ;[markovmusic.player :as player]
             [markovmusic.chain :as chain]
             [markovmusic.midi :as midi]
             [markovmusic.restapi :as api])
-  (:use [overtone.live]
-        [overtone.inst.piano]
+  (:use ;[overtone.live]
+        ;[overtone.inst.piano]
         [ring.adapter.jetty :only (run-jetty)]
         [environ.core :refer [env]]
         ))
