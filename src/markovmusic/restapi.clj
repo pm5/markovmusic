@@ -3,11 +3,12 @@
             [compojure.handler]
             [markovmusic.chain :as chain]
             [markovmusic.sample :as sample]
+            [liberator.core :refer [defresource resource]]
             )
   (:use [ring.adapter.jetty :only (run-jetty)]
         [ring.middleware.params :only (wrap-params)]
         [ring.util.response]
-        [compojure.core :only (GET POST DELETE defroutes)]
+        [compojure.core :only (GET POST DELETE ANY defroutes)]
         ))
 
 (def memory [])
@@ -37,24 +38,43 @@
   [text]
   (map #(keyword %) (clojure.string/split text #" ")))
 
+(defresource musicbox
+  :service-available? true
+  :allowed-methods [:get :post :delete]
+  :handle-ok (fn [context] (serialize ((music :more))))
+  :post! (fn [context]
+           (let [sequence (get-in context [:request :form-params "sequence"])]
+             ((music :learn) (unserialize sequence))))
+  :delete! (fn [context] ((music :forget)) "")
+  :available-media-types ["text/plain"])
+
+(defresource twinkle-star
+  :service-available? true
+  :allowed-methods [:get]
+  :handle-ok (fn [_] (serialize (->> sample/twinkle-star
+                                     chain/generate-frequency-matrix
+                                     chain/generate
+                                     (take 512)
+                                     )))
+  :available-media-types ["text/plain"])
+
+(defresource two-tigers
+  :allowed-methods [:get]
+  :handle-ok (fn [_] (serialize (->> sample/two-tigers
+                                     chain/generate-frequency-matrix
+                                     chain/generate
+                                     (take 512)
+                                     )))
+  :available-media-types ["text/plain"])
+
 (defroutes app*
   (GET "/" request "Welcome! Try our v0 API at /0")
   (GET "/0/two-tigers/raw" [] (serialize sample/two-tigers))
-  (GET "/0/two-tigers" [] (serialize (->> sample/two-tigers
-                                          chain/generate-frequency-matrix
-                                          chain/generate
-                                          (take 512)
-                                          )))
+  (ANY "/0/two-tigers" request two-tigers)
   (GET "/0/twinkle-star/raw" [] (serialize sample/twinkle-star))
-  (GET "/0/twinkle-star" [] (serialize (->> sample/twinkle-star
-                                            chain/generate-frequency-matrix
-                                            chain/generate
-                                            (take 512)
-                                            )))
-  (GET "/0/:musicbox" [musicbox] (serialize ((music :more))))
+  (ANY "/0/twinkle-star" request twinkle-star)
   (GET "/0/:musicbox/raw" [musicbox] (serialize memory))
-  (POST "/0/:musicbox" [musicbox sequence] ((music :learn) (unserialize sequence)) "")
-  (DELETE "/0/:musicbox" [musicbox] ((music :forget)) "")
+  (ANY "/0/:musicbox" request musicbox)
   (compojure.route/not-found "Sorry, there's nothing here."))
 
 (defn with-cors

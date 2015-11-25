@@ -7,6 +7,7 @@
                  [overtone "0.9.1"]
                  [compojure "1.0.1"]
                  [ring "1.0.1"]
+                 [liberator "0.14.0"]
                  [environ "1.0.0"]]
   :main ^:skip-aot markovmusic.core
   :target-path "target/%s"
