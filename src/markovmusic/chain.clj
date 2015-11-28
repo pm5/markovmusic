@@ -22,25 +22,25 @@
   [rate]
   (/ (Math/log (- 1 (rand))) (- rate)))
 
-(defn generate-next-ct
+(defn generate-next-ctmc
   [frequency-matrix holding-rates current]
   (let [next-value    (generate-next frequency-matrix (current :value))
         next-duration (exponetial-rand (holding-rates next-value))]
     {:value next-value :duration next-duration}))
 
-(defn generate-ct
+(defn generate-ctmc
   "Generate an infinite sequence of values and duration with CTMC."
-  ([frequency-matrix] (generate-ct frequency-matrix {:value nil :duration 0}))
+  ([frequency-matrix] (generate-ctmc frequency-matrix {:value nil :duration 0}))
   ([frequency-matrix current]
-   (generate-ct frequency-matrix
+   (generate-ctmc frequency-matrix
                 (zipmap (keys frequency-matrix)
                         (map (fn [x] 0.005) (range (count frequency-matrix))))
                 current))
   ([frequency-matrix holding-rates current]
-   (let [next-value (generate-next-ct frequency-matrix holding-rates current)]
+   (let [next-value (generate-next-ctmc frequency-matrix holding-rates current)]
      (lazy-seq
        (cons current
-             (generate-ct frequency-matrix holding-rates next-value)))))
+             (generate-ctmc frequency-matrix holding-rates next-value)))))
   )
 
 (defn generate-frequency-matrix
