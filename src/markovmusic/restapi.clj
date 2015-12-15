@@ -4,12 +4,20 @@
             [markovmusic.chain :as chain]
             [markovmusic.sample :as sample]
             [liberator.core :refer [defresource resource]]
+            [environ.core :refer [env]]
+            [taoensso.carmine :as car :refer [wcar]]
             )
   (:use [ring.adapter.jetty :only (run-jetty)]
         [ring.middleware.params :only (wrap-params)]
         [ring.util.response]
         [compojure.core :only (GET POST DELETE ANY defroutes)]
         ))
+
+(def server-conn {:pool {}
+                  :spec {:host (or (env :redis-ip) "127.0.0.1")}}
+  )
+
+(defmacro wcar* [& body] `(car/wcar server-conn ~@body))
 
 (def memory [])
 

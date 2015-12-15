@@ -1,0 +1,6 @@
+redis:
+  image: tutum/redis
+  environment:
+    REDIS_PASS: "**None**"
+  ports:
+    - "6379:6379"

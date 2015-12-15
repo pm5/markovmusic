@@ -24,13 +24,16 @@
                  :i nil :v- nil :i nil nil nil
                  :i nil :v- nil :i nil nil nil])
 
-;(let [sequence (->> sample/twinkle-star
-                    ;chain/generate-frequency-matrix
-                    ;chain/generate
-                    ;(take 128)
-                    ;)]
-  ;(player/play-fixed-length-notes piano (now) 200
-                                  ;(degrees->pitches sequence :major :C4))
-  ;)
+(let [sequence (->> sample/twinkle-star
+                    chain/generate-frequency-matrix
+                    chain/generate
+                    (take 512)
+                    cycle
+                    )]
+  (player/play-fixed-length-notes piano (now) 200
+                                  (degrees->pitches sequence :major :C4))
+  (player/play-fixed-length-notes piano (+ 1600 (now)) 200
+                                  (degrees->pitches sequence :major :C4))
+  )
 
-;(stop)
+(stop)

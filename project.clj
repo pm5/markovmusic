@@ -1,5 +1,5 @@
 (defproject markovmusic "0.1.0-SNAPSHOT"
-  :description "FIXME: write description"
+  :description "Generate music with Markov chain."
   :url "http://example.com/FIXME"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
@@ -8,6 +8,7 @@
                  [compojure "1.0.1"]
                  [ring "1.0.1"]
                  [liberator "0.14.0"]
+                 [com.taoensso/carmine "2.12.1"]
                  [environ "1.0.0"]]
   :main ^:skip-aot markovmusic.core
   :target-path "target/%s"
